@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JGS Code Run+</title>
+    <style>
+        body {
+            background-color: #1e1e2f;
+            color: #ffffff;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #2a2a40;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #00bcd4;
+        }
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+        select, textarea, button, input[type="file"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        select, input[type="file"] {
+            background-color: #383850;
+            color: #ffffff;
+        }
+        textarea {
+            background-color: #2a2a40;
+            color: #ffffff;
+            height: 150px;
+            resize: none;
+        }
+        button {
+            background-color: #007bff;
+            color: #ffffff;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #outputWindow {
+            background-color: #1e1e2f;
+            color: #00ff00;
+            min-height: 150px;
+            padding: 10px;
+            border: 1px solid #00bcd4;
+            border-radius: 5px;
+            overflow: auto;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+            color: #ff7f50;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>JGS Code Run+</h1>
+        <label for="codeType">Code Type:</label>
+        <select id="codeType">
+            <option value="html">HTML</option>
+            <option value="javascript">JavaScript</option>
+            <option value="java">Java</option>
+            <option value="c">C/C++</option>
+        </select>
+
+        <input type="file" id="fileInput" accept=".html,.js,.java,.c,.cpp" />
+
+        <label for="codeInput">Enter Your Code:</label>
+        <textarea id="codeInput" placeholder="Write your code here..."></textarea>
+
+        <button id="runCode">Run Code</button>
+        <div id="outputWindow">Output will appear here...</div>
+
+        <button id="clearCode">Clear</button>
+        <button id="saveCode">Save as HTML</button>
+
+        <div class="footer">Design By JGS Lanka</div>
+    </div>
+
+    <script>
+        const runButton = document.getElementById('runCode');
+        const clearButton = document.getElementById('clearCode');
+        const saveButton = document.getElementById('saveCode');
+        const fileInput = document.getElementById('fileInput');
+        const codeType = document.getElementById('codeType');
+        const codeInput = document.getElementById('codeInput');
+        const outputWindow = document.getElementById('outputWindow');
+
+        // Run code logic
+        runButton.addEventListener('click', () => {
+            const code = codeInput.value;
+            const type = codeType.value;
+            if (type === 'html') {
+                outputWindow.innerHTML = code;
+            } else if (type === 'javascript') {
+                try {
+                    outputWindow.innerHTML = eval(code);
+                } catch (err) {
+                    outputWindow.innerHTML = 'Error: ' + err.message;
+                }
+            } else {
+                outputWindow.innerHTML = `Running ${type} code is not supported in this preview.`;
+            }
+        });
+
+        // Clear code logic
+        clearButton.addEventListener('click', () => {
+            codeInput.value = '';
+            outputWindow.innerHTML = 'Output will appear here...';
+        });
+
+        // Save as HTML file logic
+        saveButton.addEventListener('click', () => {
+            const blob = new Blob([codeInput.value], { type: 'text/html' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = 'code.html';
+            a.click();
+        });
+
+        // File input logic
+        fileInput.addEventListener('change', () => {
+            const file = fileInput.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    codeInput.value = event.target.result;
+                };
+                reader.readAsText(file);
+            }
+        });
+    </script>
+</body>
+</html>
